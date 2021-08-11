@@ -1,25 +1,19 @@
 package com.niclas.notify;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,32 +28,39 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = findViewById(R.id.dynamicList);
-        int i = listView.getCount();
+
         getData();
+
         FloatingActionButton fab1 = findViewById(R.id.fab1);
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newNote();
+
             }
         });
 
     }
     private void newNote(){
         Intent intent = new Intent(MainActivity.this,NewNoteActivity.class);
-        if(listOfNotes != null)
+        startActivityForResult(intent, 100);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100)
         {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("listOfNotes",listOfNotes);
-            intent.putExtras(bundle);
+            newNote = (NoteModel) data.getExtras().getSerializable("newNote");
+            listOfNotes.add(newNote);
+            getData();
         }
-        startActivity(intent);
     }
 
     private void getData(){
-        listOfNotes = (ArrayList<NoteModel>) getIntent().getSerializableExtra("updatedListOfNotes");
-        if(listOfNotes != null){
+        if(listOfNotes.size() > EMPTYLIST){
             ListView listView = findViewById(R.id.dynamicList);
             listView.setAdapter(getListOfTitles());
             Snackbar.make(findViewById(R.id.mainLayout),"Saved",4000).show();
