@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<NoteModel> listOfNotes = new ArrayList<NoteModel>();
     private ArrayList<String> listOfTitles;
-    private SharedPreferences.Editor sharedPreferences;
-    private final int EMPTYLIST = 0;
     private final int REQUESTCODEONE = 100;
     private final int REQUESTCODETWO = 200;
     private final String FILENAME = "Notify";
@@ -147,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> getTitlesFromNoteList(){
         listOfTitles = new ArrayList<String>();
-        for(int i =0 ;i < listOfNotes.size();i++) {
+        for(int i =0 ;i < listOfNotes.size();i++)
+        {
             listOfTitles.add(listOfNotes.get(i).getTitle());
         }
         return new ArrayAdapter<String>(com.niclas.notify.MainActivity.this,android.R.layout.simple_list_item_1,listOfTitles);
