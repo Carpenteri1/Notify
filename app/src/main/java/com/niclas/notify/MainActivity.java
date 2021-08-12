@@ -5,24 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.JsonWriter;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import org.json.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> listOfTitles;
     private SharedPreferences.Editor sharedPreferences;
     private final int EMPTYLIST = 0;
-    private final int REQUESTCODE = 100;
+    private final int REQUESTCODEONE = 100;
+    private final int REQUESTCODETWO = 200;
     private final String FILENAME = "Notify";
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("theNote",theNote);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, REQUESTCODETWO);
     }
 
     private void newNote(){
         Intent intent = new Intent(MainActivity.this,NewNoteActivity.class);
-        startActivityForResult(intent, REQUESTCODE);
+        startActivityForResult(intent, REQUESTCODEONE);
     }
     private void fabNewNoteClicked(){
 
@@ -84,22 +85,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUESTCODE)
+        if(requestCode == REQUESTCODEONE)
         {
-            listOfNotes.add((NoteModel) data.getExtras().getSerializable("newNote"));
+            NoteModel newNote = (NoteModel) data.getExtras().getSerializable("newNote");
+            newNote.setId(listOfNotes.size()+1);
+            listOfNotes.add(newNote);
+
             saveToFileSystem(FILENAME);
-            Snackbar.make(findViewById(R.id.mainLayout),"Saved",2000).show();
+            Snackbar.make(findViewById(R.id.mainLayout),"Notify Saved",2000).show();
             getData();
 
+        }
+        else if(requestCode == REQUESTCODETWO){
+            NoteModel noteModel = (NoteModel) data.getExtras().getSerializable("removeNote");
+            for(int i = 0;i<=listOfNotes.size();i++){
+                if(noteModel.getId() == listOfNotes.get(i).getId()){
+                    listOfNotes.remove(listOfNotes.get(i));
+                }
+            }
+            saveToFileSystem(FILENAME);
+            Snackbar.make(findViewById(R.id.mainLayout),"Notify Removed",2000).show();
+            getData();
         }
     }
 
     private void getData(){
-        if(listOfNotes.size() > EMPTYLIST){
+
+        if(loadFromFileSystem(FILENAME)){
             ListView listView = findViewById(R.id.dynamicList);
             listView.setAdapter(getTitlesFromNoteList());
-        }else if(loadFromFileSystem(FILENAME)){
-            getData();
         }
     }
     private boolean saveToFileSystem(String fileName) {

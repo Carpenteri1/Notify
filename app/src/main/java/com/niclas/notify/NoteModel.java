@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class NoteModel  implements Serializable {
 
+    private int id;
     private String title;
     private String text;
     //private Date date;
@@ -17,4 +18,10 @@ public class NoteModel  implements Serializable {
     public void setTitle(String newTitle){ title = newTitle; }
     public void setNoteText(String newText){ text = newText; }
     public String getNoteText(){ return text; }
+    public int getId(){
+        return id;
+    }
+    public void setId(int id){
+       this.id = id;
+    }
 }
