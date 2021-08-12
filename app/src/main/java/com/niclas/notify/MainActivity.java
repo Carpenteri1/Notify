@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -17,33 +18,56 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NoteModel newNote;
     private ArrayList<NoteModel> listOfNotes = new ArrayList<NoteModel>();
     private ArrayList<String> listOfTitles;
-    private ArrayAdapter<String> adapter;
-    private SharedPreferences sharedpreferences;
     private final int EMPTYLIST = 0;
+    private final int REQUESTCODE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getData();
+        //getData();
+        fabNewNoteClicked();
+        listViewItemClicked();
+
+    }
+
+    private void listViewItemClicked() {
+
+            ListView listView = findViewById(R.id.dynamicList);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                public void onItemClick(AdapterView parentAdapter, View view,
+                                        int position, long id) {
+
+                    getSpecificNoteData(listOfNotes.get(position));
+                }
+            });
+    }
+
+    private void getSpecificNoteData(NoteModel theNote){
+        Intent intent = new Intent(MainActivity.this,NoteInfoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("theNote",theNote);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void newNote(){
+        Intent intent = new Intent(MainActivity.this,NewNoteActivity.class);
+        startActivityForResult(intent, REQUESTCODE);
+    }
+    private void fabNewNoteClicked(){
 
         FloatingActionButton fab1 = findViewById(R.id.fab1);
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newNote();
-
             }
         });
-
-    }
-    private void newNote(){
-        Intent intent = new Intent(MainActivity.this,NewNoteActivity.class);
-        startActivityForResult(intent, 100);
     }
 
 
@@ -51,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==100)
+        if(requestCode == REQUESTCODE)
         {
-            newNote = (NoteModel) data.getExtras().getSerializable("newNote");
-            listOfNotes.add(newNote);
+            listOfNotes.add((NoteModel) data.getExtras().getSerializable("newNote"));
             getData();
+
         }
     }
 
