@@ -5,26 +5,30 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foregroundGravity="fill"
+    android:foregroundTint="#F44336"
     android:textAlignment="center"
-    tools:context="com.niclas.eventhandlingactivity.MainActivity">
+    tools:context="com.niclas.notify.MainActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:clickable="true"
+        app:backgroundTint="#00FFFFFF"
+        app:elevation="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.976"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.987"
-        tools:ignore="SpeakableTextPresentCheck"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/baseline_add_circle_black_24dp"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ListView
         android:id="@+id/dynamicList"
@@ -36,8 +40,9 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
