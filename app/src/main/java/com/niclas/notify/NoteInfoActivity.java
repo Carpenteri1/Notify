@@ -15,50 +15,44 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class NoteInfoActivity extends AppCompatActivity {
-    private final int REMOVEREQUISTCODE = 200;
-    private final int EDITREQUISTCODE = 300;
-    private ArrayList<String> noteListValues;
-    private boolean editButtonClicked = false;
-    private boolean removeButtonClicked = false;
+    private final int REQUESTCODE_REMOVENOTE = 200;
+    private final int REQUESTCODE_EDITNOTE = 300;
+
+    private final String NOTE_KEY = "DataGet";
+
     protected void onCreate(@Nullable Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_noteinfo);
-        NoteModel theNote = getNoteData();
+        NoteModel theNote = getNoteData(NOTE_KEY);
 
-        if(fabRemoveBtnClicked(theNote))
-            removeNote(theNote);
+        fabRemoveBtnClicked(theNote);
+        fabEditButtonClicked(theNote);
 
-        if(fabEditButtonClicked(theNote))
-            editNote(theNote);
     }
 
-    private boolean fabEditButtonClicked(NoteModel theNote){
-        editButtonClicked = false;
+    private void fabEditButtonClicked(NoteModel theNote){
         FloatingActionButton editButton = findViewById(R.id.fabEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editButtonClicked = true;
+                editNote(theNote);
             }
         });
-        return editButtonClicked;
     }
 
-    private boolean fabRemoveBtnClicked(NoteModel theNote){
-        removeButtonClicked = false;
+    private void fabRemoveBtnClicked(NoteModel theNote){
         FloatingActionButton removeButton = findViewById(R.id.fabRemove);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removeButtonClicked = true;
+                removeNote(theNote);
             }
         });
-        return removeButtonClicked;
     }
 
-    private NoteModel getNoteData() {
+    private NoteModel getNoteData(String keyValue) {
         Bundle bundle = getIntent().getExtras();
-        return setNoteData((NoteModel) bundle.getSerializable("theNote"));
+        return setNoteData((NoteModel) bundle.getSerializable(keyValue));
     }
 
     private NoteModel setNoteData(NoteModel theNote){
@@ -71,17 +65,14 @@ public class NoteInfoActivity extends AppCompatActivity {
 
         return theNote;
     }
-    private void removeNote(NoteModel theNote)
-    {
-        Intent intent = newIntent().putExtras(newBundle("removeNote",theNote));
-        setResult(REMOVEREQUISTCODE,intent);
+    private void removeNote(NoteModel theNote){
+        setResult(REQUESTCODE_REMOVENOTE, newIntent().putExtras(newBundle(NOTE_KEY,theNote)));
         finish();
     }
 
     private void editNote(NoteModel theNote)
     {
-        Intent intent = newIntent().putExtras(newBundle("editNote",theNote));
-        setResult(EDITREQUISTCODE,intent);
+        setResult(REQUESTCODE_EDITNOTE, newIntent().putExtras(newBundle(NOTE_KEY,theNote)));
         finish();
     }
 

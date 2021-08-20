@@ -40,13 +40,13 @@ public class NewNoteActivity extends AppCompatActivity{
 
                 if(checkInput(newNote.getTitle(), newNote.getNoteText()))
                 {
-                    saveNote(newNote);
+                    saveNoteAndSend(newNote);
                 }
             }
         });
     }
 
-    private void saveNote(NoteModel newNote)
+    private void saveNoteAndSend(NoteModel newNote)
     {
         Intent intent = new Intent();
         Bundle newBundle = new Bundle();

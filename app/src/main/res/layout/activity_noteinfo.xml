@@ -14,9 +14,9 @@
         android:layout_width="0dp"
         android:layout_height="34dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="640dp"
+        android:layout_marginBottom="24dp"
         android:text="TextView"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,13 +24,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.163" />
+        app:layout_constraintVertical_bias="0.041" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabRemove"
         android:layout_width="62dp"
         android:layout_height="56dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="4dp"
         android:clickable="true"
@@ -38,8 +39,10 @@
         app:elevation="200dp"
         app:layout_constraintBottom_toTopOf="@+id/fabEdit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.973"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.984"
         app:srcCompat="@drawable/baseline_delete_black_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -55,28 +58,28 @@
         app:elevation="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.973"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973"
+        app:layout_constraintVertical_bias="0.927"
         app:srcCompat="@drawable/baseline_post_add_black_24dp" />
 
     <TextView
         android:id="@+id/NoteText"
-        android:layout_width="362dp"
-        android:layout_height="500dp"
+        android:layout_width="0dp"
+        android:layout_height="466dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="24dp"
         android:text="TextView"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78" />
+        app:layout_constraintTop_toBottomOf="@+id/NoteTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/view"

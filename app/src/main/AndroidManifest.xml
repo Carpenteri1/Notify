@@ -20,7 +20,8 @@
         <activity android:name=".NewNoteActivity">
         </activity>
         <activity android:name=".NoteInfoActivity">
-
+        </activity>
+        <activity android:name=".EditNoteActivity">
         </activity>
 </application>
 

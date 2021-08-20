@@ -29,9 +29,18 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<NoteModel> listOfNotes = new ArrayList<NoteModel>();
     private ArrayList<String> listOfTitles;
-    private final int REQUESTCODEONE = 100;
-    private final int REQUESTCODETWO = 200;
+    private final int NO_REQUESTCODE = 0;
+
+    private final int RESULTCODE_NEWNOTE = 100;
+    private final int RESULTCODE_REMOVENOTE = 200;
+    private final int RESULTCODE_REQUEST_EDIT = 300;
+    private final int RESULTCODE_EDITNOTE = 400;
+
+    private final String NEWNOTE_KEY = "newNote";
+    private final String NOTE_KEY = "DataGet";
+
     private final String FILENAME = "Notify";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -50,22 +59,22 @@ public class MainActivity extends AppCompatActivity {
 
                 public void onItemClick(AdapterView parentAdapter, View view,
                                         int position, long id) {
-                    getSpecificNoteData(listOfNotes.get(position));
+                    Intent intent = new Intent(MainActivity.this,NoteInfoActivity.class);
+                    getSpecificNoteData(listOfNotes.get(position),intent);
                 }
             });
     }
 
-    private void getSpecificNoteData(NoteModel theNote){
-        Intent intent = new Intent(MainActivity.this,NoteInfoActivity.class);
+    private void getSpecificNoteData(NoteModel theNote,Intent intent){
         Bundle bundle = new Bundle();
-        bundle.putSerializable("theNote",theNote);
+        bundle.putSerializable(NOTE_KEY,theNote);
         intent.putExtras(bundle);
-        startActivityForResult(intent, REQUESTCODETWO);
+        startActivityForResult(intent,NO_REQUESTCODE);
     }
 
     private void newNote(){
         Intent intent = new Intent(MainActivity.this,NewNoteActivity.class);
-        startActivityForResult(intent, REQUESTCODEONE);
+        startActivityForResult(intent, NO_REQUESTCODE);
     }
     private void fabNewNoteClicked(){
 
@@ -77,34 +86,71 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUESTCODEONE)
+        if(resultCode == RESULTCODE_NEWNOTE)
         {
-            NoteModel newNote = (NoteModel) data.getExtras().getSerializable("newNote");
+            NoteModel newNote = (NoteModel) data.getExtras().getSerializable(NEWNOTE_KEY);
             newNote.setId(listOfNotes.size()+1);
             listOfNotes.add(newNote);
-
-            saveToFileSystem(FILENAME);
-            Snackbar.make(findViewById(R.id.mainLayout),"Notify Saved",2000).show();
-            getData();
-
+            if(saveToFile("notify edited"));
+                getData();
         }
-        else if(requestCode == REQUESTCODETWO){
-            NoteModel noteModel = (NoteModel) data.getExtras().getSerializable("removeNote");
-            for(int i = 0;i<=listOfNotes.size();i++){
-                if(noteModel.getId() == listOfNotes.get(i).getId()){
-                    listOfNotes.remove(listOfNotes.get(i));
+        else{ // if note already, and want to remove or edit
+            NoteModel noteModel = (NoteModel) data.getExtras().getSerializable(NOTE_KEY);
+            int index = -1;
+
+            if(resultCode == RESULTCODE_REMOVENOTE){
+                index = getNoteIndex(noteModel);
+                if(index != -1){
+                    listOfNotes.remove(listOfNotes.get(index));
+                    if(saveToFile("notify edited"));
+                        getData();
                 }
             }
-            saveToFileSystem(FILENAME);
-            Snackbar.make(findViewById(R.id.mainLayout),"Notify Removed",2000).show();
-            getData();
+            else if(resultCode == RESULTCODE_REQUEST_EDIT){
+                Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
+                getSpecificNoteData(noteModel,intent);
+            }
+            else if(resultCode == RESULTCODE_EDITNOTE){
+                index = getNoteIndex(noteModel);
+                if(index != -1){
+                    if(updateNoteValue(index,noteModel) &&
+                            saveToFile("notify edited"))
+                        getData();
+
+                }
+
+            }
+
         }
+
+    }
+
+    private boolean updateNoteValue(int index, NoteModel note){
+        boolean updatedValues = true;
+        try{
+            listOfNotes.get(index).setNoteText(note.getNoteText());
+            listOfNotes.get(index).setTitle(note.getTitle());
+        }catch (Exception e)
+        {
+            updatedValues = false;
+        }
+        return updatedValues;
+    }
+    private boolean saveToFile(String message){
+        Snackbar.make(findViewById(R.id.mainLayout),message,2000).show();
+        return saveToFileSystem(FILENAME);
+    }
+    private int getNoteIndex(NoteModel noteModel){
+        for(int i = 0;i <= listOfNotes.size();i++){
+            if(noteModel.getId() == listOfNotes.get(i).getId()){
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void getData(){
