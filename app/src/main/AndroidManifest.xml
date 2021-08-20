@@ -9,7 +9,6 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Notify"       >
-
     <activity
         android:name=".MainActivity"
         android:exported="true">
@@ -19,7 +18,6 @@
         </intent-filter>
     </activity>
         <activity android:name=".NewNoteActivity">
-
         </activity>
         <activity android:name=".NoteInfoActivity">
 
